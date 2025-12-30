@@ -398,15 +398,30 @@ export class BotService {
         `*2-qadam:* Quyidagini yozing:\n` +
         `\`\`\`\n` +
         `#!/bin/bash\n` +
-        `curl -s -X POST http://localhost:4001/alert \\\n` +
+        `API="http://localhost:4001"\n` +
+        `KEY="${deviceKey}"\n\n` +
+        `# Boshlanganda alert yuborish\n` +
+        `curl -s -X POST $API/alert \\\n` +
         `  -H "Content-Type: application/json" \\\n` +
-        `  -d '{"deviceKey":"${deviceKey}","username":"'$(whoami)'"}'\n` +
+        `  -d "{\\"deviceKey\\":\\"$KEY\\",\\"username\\":\\"$(whoami)\\"}"\n\n` +
+        `# Har 30 sekundda buyruq tekshirish\n` +
+        `while true; do\n` +
+        `  CMD=$(curl -s "$API/command/$KEY")\n` +
+        `  if [ "$CMD" = "shutdown" ]; then\n` +
+        `    osascript -e 'tell app "System Events" to shut down'\n` +
+        `  elif [ "$CMD" = "restart" ]; then\n` +
+        `    osascript -e 'tell app "System Events" to restart'\n` +
+        `  elif [ "$CMD" = "lock" ]; then\n` +
+        `    pmset displaysleepnow\n` +
+        `  fi\n` +
+        `  sleep 30\n` +
+        `done\n` +
         `\`\`\`\n\n` +
         `*3-qadam:* Saqlash va ruxsat\n` +
         `\`\`\`\n` +
         `chmod +x ~/himoyachi.sh\n` +
         `\`\`\`\n\n` +
-        `*4-qadam:* Avtomatik ishga tushirish\n` +
+        `*4-qadam:* LaunchAgent yaratish\n` +
         `\`\`\`\n` +
         `nano ~/Library/LaunchAgents/com.himoyachi.plist\n` +
         `\`\`\`\n\n` +
@@ -425,6 +440,8 @@ export class BotService {
         `  </array>\n` +
         `  <key>RunAtLoad</key>\n` +
         `  <true/>\n` +
+        `  <key>KeepAlive</key>\n` +
+        `  <true/>\n` +
         `</dict>\n` +
         `</plist>\n` +
         `\`\`\`\n\n` +
@@ -439,11 +456,23 @@ export class BotService {
         `*1-qadam:* PowerShell script yaratish\n` +
         `Notepad oching va quyidagini yozing:\n` +
         `\`\`\`\n` +
-        `$body = @{\n` +
-        `  deviceKey = "${deviceKey}"\n` +
-        `  username = $env:USERNAME\n` +
-        `} | ConvertTo-Json\n` +
-        `Invoke-RestMethod -Uri "http://localhost:4001/alert" -Method Post -Body $body -ContentType "application/json"\n` +
+        `$API = "http://localhost:4001"\n` +
+        `$KEY = "${deviceKey}"\n\n` +
+        `# Boshlanganda alert yuborish\n` +
+        `$body = @{deviceKey=$KEY; username=$env:USERNAME} | ConvertTo-Json\n` +
+        `Invoke-RestMethod -Uri "$API/alert" -Method Post -Body $body -ContentType "application/json"\n\n` +
+        `# Har 30 sekundda buyruq tekshirish\n` +
+        `while ($true) {\n` +
+        `  $cmd = Invoke-RestMethod -Uri "$API/command/$KEY" -Method Get\n` +
+        `  if ($cmd -eq "shutdown") {\n` +
+        `    Stop-Computer -Force\n` +
+        `  } elseif ($cmd -eq "restart") {\n` +
+        `    Restart-Computer -Force\n` +
+        `  } elseif ($cmd -eq "lock") {\n` +
+        `    rundll32.exe user32.dll,LockWorkStation\n` +
+        `  }\n` +
+        `  Start-Sleep -Seconds 30\n` +
+        `}\n` +
         `\`\`\`\n\n` +
         `*2-qadam:* Saqlash\n` +
         `\`C:\\himoyachi.ps1\` sifatida saqlang\n\n` +
@@ -451,7 +480,7 @@ export class BotService {
         `\`Win + R\` → \`shell:startup\`\n` +
         `Shu papkaga shortcut yarating:\n` +
         `\`\`\`\n` +
-        `powershell -ExecutionPolicy Bypass -File C:\\himoyachi.ps1\n` +
+        `powershell -WindowStyle Hidden -ExecutionPolicy Bypass -File C:\\himoyachi.ps1\n` +
         `\`\`\`\n\n` +
         `✅ Tayyor!`;
     } else if (osType === 'linux') {
@@ -464,21 +493,48 @@ export class BotService {
         `*2-qadam:* Quyidagini yozing:\n` +
         `\`\`\`\n` +
         `#!/bin/bash\n` +
-        `curl -s -X POST http://localhost:4001/alert \\\n` +
+        `API="http://localhost:4001"\n` +
+        `KEY="${deviceKey}"\n\n` +
+        `# Boshlanganda alert yuborish\n` +
+        `curl -s -X POST $API/alert \\\n` +
         `  -H "Content-Type: application/json" \\\n` +
-        `  -d '{"deviceKey":"${deviceKey}","username":"'$(whoami)'"}'\n` +
+        `  -d "{\\"deviceKey\\":\\"$KEY\\",\\"username\\":\\"$(whoami)\\"}"\n\n` +
+        `# Har 30 sekundda buyruq tekshirish\n` +
+        `while true; do\n` +
+        `  CMD=$(curl -s "$API/command/$KEY")\n` +
+        `  if [ "$CMD" = "shutdown" ]; then\n` +
+        `    sudo shutdown -h now\n` +
+        `  elif [ "$CMD" = "restart" ]; then\n` +
+        `    sudo reboot\n` +
+        `  elif [ "$CMD" = "lock" ]; then\n` +
+        `    loginctl lock-session\n` +
+        `  fi\n` +
+        `  sleep 30\n` +
+        `done\n` +
         `\`\`\`\n\n` +
         `*3-qadam:* Saqlash va ruxsat\n` +
         `\`\`\`\n` +
         `chmod +x ~/himoyachi.sh\n` +
         `\`\`\`\n\n` +
-        `*4-qadam:* Avtomatik ishga tushirish\n` +
+        `*4-qadam:* Systemd service yaratish\n` +
         `\`\`\`\n` +
-        `crontab -e\n` +
+        `sudo nano /etc/systemd/system/himoyachi.service\n` +
         `\`\`\`\n\n` +
-        `Oxiriga qo'shing:\n` +
+        `Ichiga yozing:\n` +
         `\`\`\`\n` +
-        `@reboot /bin/bash ~/himoyachi.sh\n` +
+        `[Unit]\n` +
+        `Description=Himoyachi Monitor\n` +
+        `After=network.target\n\n` +
+        `[Service]\n` +
+        `ExecStart=/bin/bash /home/$USER/himoyachi.sh\n` +
+        `Restart=always\n\n` +
+        `[Install]\n` +
+        `WantedBy=multi-user.target\n` +
+        `\`\`\`\n\n` +
+        `*5-qadam:* Faollashtirish\n` +
+        `\`\`\`\n` +
+        `sudo systemctl enable himoyachi\n` +
+        `sudo systemctl start himoyachi\n` +
         `\`\`\`\n\n` +
         `✅ Tayyor!`;
     } else {
