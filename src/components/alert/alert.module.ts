@@ -1,19 +1,21 @@
 import { Module } from '@nestjs/common';
-import { AlertService } from './alert.service';
-import { AlertController } from './alert.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Alert, AlertSchema } from 'src/entity/alert.entity';
-import { Device, DeviceSchema } from 'src/entity/device.entity';
+import { AlertController } from './alert.controller';
+import { AlertService } from './alert.service';
+import { Alert, AlertSchema } from '../../entity/alert.entity';
+import { Device, DeviceSchema } from '../../entity/device.entity';
+import { Member, MemberSchema } from '../../entity/member.entity';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Alert.name, schema: AlertSchema },
       { name: Device.name, schema: DeviceSchema },
+      { name: Member.name, schema: MemberSchema },
     ]),
   ],
-  providers: [AlertService],
   controllers: [AlertController],
+  providers: [AlertService],
   exports: [AlertService],
 })
 export class AlertModule {}

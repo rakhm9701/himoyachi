@@ -11,6 +11,10 @@ export class CreateDeviceDto {
   @IsEnum(DeviceOS)
   @IsOptional()
   osType?: DeviceOS;
+
+  @IsString()
+  @IsOptional()
+  description?: string;
 }
 
 export class UpdateDeviceDto {
@@ -21,4 +25,8 @@ export class UpdateDeviceDto {
   @IsEnum(DeviceOS)
   @IsOptional()
   osType?: DeviceOS;
+
+  @IsString()
+  @IsOptional()
+  description?: string;
 }

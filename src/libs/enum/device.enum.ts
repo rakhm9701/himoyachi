@@ -5,6 +5,7 @@ export enum DeviceOS {
 }
 
 export enum DeviceStatus {
+  PENDING = 'pending',
   ACTIVE = 'active',
   INACTIVE = 'inactive',
 }

@@ -92,4 +92,14 @@ export class DeviceService {
     console.log('Device:', device);
     return device;
   }
+
+  async findById(id: string): Promise<Device | null> {
+    ValidationHelper.validateObjectId(id);
+    return this.deviceModel.findById(id);
+  }
+  async getAlertCount(deviceId: string): Promise<number> {
+    // Bu yerda alertModel kerak, yoki alertService chaqirish kerak
+    // Hozircha 0 qaytaramiz, keyinroq to'ldiramiz
+    return 0;
+  }
 }

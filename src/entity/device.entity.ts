@@ -18,7 +18,7 @@ export class Device {
   @Prop({ enum: DeviceOS, default: DeviceOS.MAC })
   osType: DeviceOS;
 
-  @Prop({ enum: DeviceStatus, default: DeviceStatus.ACTIVE, index: true })
+  @Prop({ enum: DeviceStatus, default: DeviceStatus.PENDING, index: true })
   status: DeviceStatus;
 
   @Prop()
