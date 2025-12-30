@@ -50,29 +50,19 @@ export class BotUpdate {
     return this.botService.onCallback(ctx);
   }
 
-  // Textlar: menu + step inputlar
   @On('text')
   async onText(@Ctx() ctx: any) {
     const text = ctx.text;
     if (!text) return;
 
-    if (text === '➕ Qurilma qo‘shish') {
-      return this.botService.startAddFlow(ctx);
-    }
+    // Emoji orqali aniqlash (barcha tillarda ishlaydi)
+    if (text.includes('➕')) return this.botService.startAddFlow(ctx);
+    if (text.includes('📱')) return this.botService.onList(ctx);
+    if (text.includes('📊')) return this.botService.onStats(ctx);
+    if (text.includes('🌐')) return this.botService.onLang(ctx);
+    if (text.includes('❓')) return this.botService.onHelp(ctx);
+    if (text.includes('⬅️')) return this.botService.cancelFlow(ctx);
 
-    if (text === '📱 Qurilmalarim') {
-      return this.botService.onList(ctx);
-    }
-
-    if (text === '❓ Yordam') {
-      return this.botService.onHelp(ctx);
-    }
-
-    if (text === '⬅️ Orqaga') {
-      return this.botService.cancelFlow(ctx);
-    }
-
-    // Menu emas — ehtimol /add step (nom/description)
     return this.botService.onText(ctx);
   }
 }
