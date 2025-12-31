@@ -5,8 +5,9 @@ import { AlertModule } from './alert/alert.module';
 import { BotModule } from './bot/bot.module';
 import { CronModule } from './cron/cron.module';
 import { CommandModule } from './command/command.module';
+import { ScreenshotModule } from './screenshot/screenshot.module';
 
 @Module({
-  imports: [MemberModule, DeviceModule, AlertModule, BotModule, CronModule, CommandModule]
+  imports: [MemberModule, DeviceModule, AlertModule, BotModule, CronModule, CommandModule, ScreenshotModule]
 })
 export class ComponentsModule {}

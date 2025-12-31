@@ -42,7 +42,7 @@ export class BotService {
     return Markup.keyboard([
       [t(lang, 'btnAdd'), t(lang, 'btnDevices'), t(lang, 'btnStats')],
       [t(lang, 'btnShutdown'), t(lang, 'btnRestart'), t(lang, 'btnLock')],
-      [t(lang, 'btnLang'), t(lang, 'btnHelp')],
+      [t(lang, 'btnScreenshot'), t(lang, 'btnLang'), t(lang, 'btnHelp')],
     ]).resize();
   }
   private getBackMenu(lang: Lang) {
@@ -381,19 +381,24 @@ export class BotService {
 
         const messages: Record<string, Record<string, string>> = {
           shutdown: {
-            uz: "⏹ O'chirish buyrug'i yuborildi!",
+            uz: "⏹ Kompyuter o'chirish buyrug'i yuborildi!",
             ru: '⏹ Команда выключения отправлена!',
             en: '⏹ Shutdown command sent!',
           },
           restart: {
-            uz: "🔄 Qayta yuklash buyrug'i yuborildi!",
+            uz: "🔄 Kompyuter qayta yuklash buyrug'i yuborildi!",
             ru: '🔄 Команда перезагрузки отправлена!',
             en: '🔄 Restart command sent!',
           },
           lock: {
-            uz: "🔒 Qulflash buyrug'i yuborildi!",
+            uz: "🔒 Ekran qulflash buyrug'i yuborildi!",
             ru: '🔒 Команда блокировки отправлена!',
             en: '🔒 Lock command sent!',
+          },
+          screenshot: {
+            uz: "📸 Screenshot buyrug'i yuborildi!",
+            ru: '📸 Команда скриншота отправлена!',
+            en: '📸 Screenshot command sent!',
           },
         };
 
@@ -440,19 +445,35 @@ export class BotService {
         `#!/bin/bash\n` +
         `API="http://localhost:4001"\n` +
         `KEY="${deviceKey}"\n\n` +
-        `# Boshlanganda alert yuborish\n` +
         `curl -s -X POST $API/alert \\\n` +
         `  -H "Content-Type: application/json" \\\n` +
         `  -d "{\\"deviceKey\\":\\"$KEY\\",\\"username\\":\\"$(whoami)\\"}"\n\n` +
-        `# Har 30 sekundda buyruq tekshirish\n` +
         `while true; do\n` +
-        `  CMD=$(curl -s "$API/command/$KEY")\n` +
-        `  if [ "$CMD" = "shutdown" ]; then\n` +
+        `  RESPONSE=$(curl -s "$API/command/$KEY")\n` +
+        `  if [ "$RESPONSE" = "shutdown" ]; then\n` +
         `    osascript -e 'tell app "System Events" to shut down'\n` +
-        `  elif [ "$CMD" = "restart" ]; then\n` +
+        `  elif [ "$RESPONSE" = "restart" ]; then\n` +
         `    osascript -e 'tell app "System Events" to restart'\n` +
-        `  elif [ "$CMD" = "lock" ]; then\n` +
-        `    pmset displaysleepnow\n` +
+        `  elif [ "$RESPONSE" = "lock" ]; then\n` +
+        `    osascript -e 'tell application "System Events" to keystroke "q" using {control down, command down}'\n` +
+        `  elif [[ "$RESPONSE" == *"screenshot"* ]]; then\n` +
+        `    CMD_ID=$(echo $RESPONSE | sed 's/.*"commandId":"\\([^"]*\\)".*/\\1/')\n` +
+        `    screencapture -x -t jpg -o -D 1 /tmp/screenshot1.jpg\n` +
+        `    screencapture -x -t jpg -o -D 2 /tmp/screenshot2.jpg\n` +
+        `    if [ -f /tmp/screenshot1.jpg ]; then\n` +
+        `      curl -s -X POST "$API/screenshot/upload" \\\n` +
+        `        -F "file=@/tmp/screenshot1.jpg" \\\n` +
+        `        -F "deviceKey=$KEY" \\\n` +
+        `        -F "commandId=$CMD_ID"\n` +
+        `      rm /tmp/screenshot1.jpg\n` +
+        `    fi\n` +
+        `    if [ -f /tmp/screenshot2.jpg ]; then\n` +
+        `      curl -s -X POST "$API/screenshot/upload" \\\n` +
+        `        -F "file=@/tmp/screenshot2.jpg" \\\n` +
+        `        -F "deviceKey=$KEY" \\\n` +
+        `        -F "commandId=$CMD_ID"\n` +
+        `      rm /tmp/screenshot2.jpg\n` +
+        `    fi\n` +
         `  fi\n` +
         `  sleep 30\n` +
         `done\n` +
@@ -498,18 +519,26 @@ export class BotService {
         `\`\`\`\n` +
         `$API = "http://localhost:4001"\n` +
         `$KEY = "${deviceKey}"\n\n` +
-        `# Boshlanganda alert yuborish\n` +
         `$body = @{deviceKey=$KEY; username=$env:USERNAME} | ConvertTo-Json\n` +
         `Invoke-RestMethod -Uri "$API/alert" -Method Post -Body $body -ContentType "application/json"\n\n` +
-        `# Har 30 sekundda buyruq tekshirish\n` +
         `while ($true) {\n` +
-        `  $cmd = Invoke-RestMethod -Uri "$API/command/$KEY" -Method Get\n` +
-        `  if ($cmd -eq "shutdown") {\n` +
+        `  $response = Invoke-RestMethod -Uri "$API/command/$KEY" -Method Get\n` +
+        `  if ($response -eq "shutdown") {\n` +
         `    Stop-Computer -Force\n` +
-        `  } elseif ($cmd -eq "restart") {\n` +
+        `  } elseif ($response -eq "restart") {\n` +
         `    Restart-Computer -Force\n` +
-        `  } elseif ($cmd -eq "lock") {\n` +
+        `  } elseif ($response -eq "lock") {\n` +
         `    rundll32.exe user32.dll,LockWorkStation\n` +
+        `  } elseif ($response.type -eq "screenshot") {\n` +
+        `    $cmdId = $response.commandId\n` +
+        `    Add-Type -AssemblyName System.Windows.Forms\n` +
+        `    $screen = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds\n` +
+        `    $bitmap = New-Object System.Drawing.Bitmap($screen.Width, $screen.Height)\n` +
+        `    $graphics = [System.Drawing.Graphics]::FromImage($bitmap)\n` +
+        `    $graphics.CopyFromScreen($screen.Location, [System.Drawing.Point]::Empty, $screen.Size)\n` +
+        `    $bitmap.Save("C:\\screenshot.jpg", [System.Drawing.Imaging.ImageFormat]::Jpeg)\n` +
+        `    curl.exe -X POST "$API/screenshot/upload" -F "file=@C:\\screenshot.jpg" -F "deviceKey=$KEY" -F "commandId=$cmdId"\n` +
+        `    Remove-Item "C:\\screenshot.jpg"\n` +
         `  }\n` +
         `  Start-Sleep -Seconds 30\n` +
         `}\n` +
@@ -535,19 +564,25 @@ export class BotService {
         `#!/bin/bash\n` +
         `API="http://localhost:4001"\n` +
         `KEY="${deviceKey}"\n\n` +
-        `# Boshlanganda alert yuborish\n` +
         `curl -s -X POST $API/alert \\\n` +
         `  -H "Content-Type: application/json" \\\n` +
         `  -d "{\\"deviceKey\\":\\"$KEY\\",\\"username\\":\\"$(whoami)\\"}"\n\n` +
-        `# Har 30 sekundda buyruq tekshirish\n` +
         `while true; do\n` +
-        `  CMD=$(curl -s "$API/command/$KEY")\n` +
-        `  if [ "$CMD" = "shutdown" ]; then\n` +
+        `  RESPONSE=$(curl -s "$API/command/$KEY")\n` +
+        `  if [ "$RESPONSE" = "shutdown" ]; then\n` +
         `    sudo shutdown -h now\n` +
-        `  elif [ "$CMD" = "restart" ]; then\n` +
+        `  elif [ "$RESPONSE" = "restart" ]; then\n` +
         `    sudo reboot\n` +
-        `  elif [ "$CMD" = "lock" ]; then\n` +
+        `  elif [ "$RESPONSE" = "lock" ]; then\n` +
         `    loginctl lock-session\n` +
+        `  elif [[ "$RESPONSE" == *"screenshot"* ]]; then\n` +
+        `    CMD_ID=$(echo $RESPONSE | sed 's/.*"commandId":"\\([^"]*\\)".*/\\1/')\n` +
+        `    scrot -q 80 /tmp/screenshot.jpg\n` +
+        `    curl -s -X POST "$API/screenshot/upload" \\\n` +
+        `      -F "file=@/tmp/screenshot.jpg" \\\n` +
+        `      -F "deviceKey=$KEY" \\\n` +
+        `      -F "commandId=$CMD_ID"\n` +
+        `    rm /tmp/screenshot.jpg\n` +
         `  fi\n` +
         `  sleep 30\n` +
         `done\n` +
@@ -680,22 +715,26 @@ export class BotService {
 
       const messages: Record<string, Record<string, string>> = {
         shutdown: {
-          uz: "⏹ Kompyuter o'chirish buyrug'i yuborildi!",
+          uz: "⏹ O'chirish buyrug'i yuborildi!",
           ru: '⏹ Команда выключения отправлена!',
           en: '⏹ Shutdown command sent!',
         },
         restart: {
-          uz: "🔄 Kompyuter qayta yuklash buyrug'i yuborildi!",
+          uz: "🔄 Qayta yuklash buyrug'i yuborildi!",
           ru: '🔄 Команда перезагрузки отправлена!',
           en: '🔄 Restart command sent!',
         },
         lock: {
-          uz: "🔒 Ekran qulflash buyrug'i yuborildi!",
+          uz: "🔒 Qulflash buyrug'i yuborildi!",
           ru: '🔒 Команда блокировки отправлена!',
           en: '🔒 Lock command sent!',
         },
+        screenshot: {
+          uz: "📸 Screenshot buyrug'i yuborildi!",
+          ru: '📸 Команда скриншота отправлена!',
+          en: '📸 Screenshot command sent!',
+        },
       };
-
       return ctx.reply(messages[commandType][lang]);
     }
 
@@ -723,8 +762,18 @@ export class BotService {
         ru: '🔒 Какое устройство заблокировать?',
         en: '🔒 Which device to lock?',
       },
+      screenshot: {
+        uz: '📸 Qaysi qurilmadan screenshot?',
+        ru: '📸 С какого устройства скриншот?',
+        en: '📸 Screenshot from which device?',
+      },
     };
 
     await ctx.reply(titles[commandType][lang], Markup.inlineKeyboard(buttons));
+  }
+
+  // /screenshot - Ekran rasmi olish
+  async onScreenshot(ctx: Context) {
+    return this.sendCommand(ctx, 'screenshot');
   }
 }

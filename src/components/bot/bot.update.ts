@@ -62,6 +62,12 @@ export class BotUpdate {
     return this.botService.onLock(ctx);
   }
 
+  @Command('screenshot')
+  async onScreenshot(@Ctx() ctx: Context) {
+    console.log('Bot: /screenshot');
+    return this.botService.onScreenshot(ctx);
+  }
+
   // Inline buttonlar (OS tanlash)
   @On('callback_query')
   async onCallback(@Ctx() ctx: any) {
@@ -83,6 +89,7 @@ export class BotUpdate {
     if (text.includes('⏹')) return this.botService.onShutdown(ctx);
     if (text.includes('🔄')) return this.botService.onRestart(ctx);
     if (text.includes('🔒')) return this.botService.onLock(ctx);
+    if (text.includes('📸')) return this.botService.onScreenshot(ctx);
 
     return this.botService.onText(ctx);
   }

@@ -39,6 +39,7 @@ export const messages = {
     btnShutdown: "⏹ O'chirish",
     btnRestart: '🔄 Qayta yuklash',
     btnLock: '🔒 Qulflash',
+    btnScreenshot: '📸 Screenshot',
 
     // Stats
     stats:
@@ -59,21 +60,20 @@ export const messages = {
     // Help
     help: `🛡 Himoyachi Bot - Yordam
 
-Asosiy buyruqlar:
-/start - Botni boshlash
-/add - Yangi qurilma qo'shish
-/list - Qurilmalarim
-/stats - Statistika
-/lang - Til o'zgartirish
-/setup - Sozlash yo'riqnomasi
-/help - Yordam
+      Asosiy buyruqlar:
+      /start - Botni boshlash
+      /add - Yangi qurilma qo'shish
+      /list - Qurilmalarim
+      /stats - Statistika
+      /shutdown - Kompyuterni o'chirish
+      /restart - Qayta yuklash
+      /lock - Ekranni qulflash
+      /screenshot - Ekran rasmi olish
+      /lang - Til o'zgartirish
+      /setup - Sozlash yo'riqnomasi
+      /help - Yordam
 
-Qanday ishlaydi?
-1) /add orqali qurilma qo'shasiz
-2) Bot kalit beradi
-3) Kompyuter signal yuborsa — sizga xabar keladi
-
-Savol bo'lsa: @odilov07ko`,
+      Savol bo'lsa: @odilov07ko`,
   },
 
   ru: {
@@ -116,6 +116,7 @@ Savol bo'lsa: @odilov07ko`,
     btnShutdown: '⏹ Выключить',
     btnRestart: '🔄 Перезагрузить',
     btnLock: '🔒 Заблокировать',
+    btnScreenshot: '📸 Скриншот',
 
     // Stats
     stats:
@@ -192,6 +193,7 @@ Savol bo'lsa: @odilov07ko`,
     btnShutdown: '⏹ Shutdown',
     btnRestart: '🔄 Restart',
     btnLock: '🔒 Lock',
+    btnScreenshot: '📸 Screenshot',
 
     // Stats
     stats:

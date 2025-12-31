@@ -31,7 +31,10 @@ export class CommandService {
   }
 
   // Pending buyruqni olish (Script'dan)
-  async getPendingCommand(deviceKey: string): Promise<string> {
+  // Pending buyruqni olish (Script'dan)
+  async getPendingCommand(
+    deviceKey: string,
+  ): Promise<{ type: string; commandId: string } | string> {
     const device = await this.deviceModel.findOne({ deviceKey });
     if (!device) {
       return '';
@@ -48,7 +51,15 @@ export class CommandService {
       return '';
     }
 
-    // Buyruqni executed qilish
+    // Screenshot bo'lsa - commandId ham qaytarish
+    if (command.type === 'screenshot') {
+      return {
+        type: command.type,
+        commandId: (command as any)._id.toString(),
+      };
+    }
+
+    // Boshqa buyruqlar - executed qilish
     await this.commandModel.findByIdAndUpdate(command._id, {
       status: CommandStatus.EXECUTED,
       executedAt: new Date(),
