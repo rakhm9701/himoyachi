@@ -30,7 +30,7 @@ export class DeviceService {
       deviceKey,
     });
     const result = await newDevice.save();
-    console.log('Result:', result);
+
     return result;
   }
 
@@ -52,7 +52,6 @@ export class DeviceService {
     if (!device) {
       throw new NotFoundException(ErrorMessages.DEVICE_NOT_FOUND);
     }
-    console.log('Device:', device);
     return device;
   }
 
@@ -65,7 +64,6 @@ export class DeviceService {
     if (!device) {
       throw new NotFoundException(ErrorMessages.DEVICE_NOT_FOUND);
     }
-    console.log('Result:', device);
     return device;
   }
 
@@ -76,7 +74,6 @@ export class DeviceService {
     if (!device) {
       throw new NotFoundException(ErrorMessages.DEVICE_NOT_FOUND);
     }
-    console.log('Deleted Device:', device);
     return { message: "Qurilma o'chirildi!" };
   }
 
@@ -89,7 +86,7 @@ export class DeviceService {
     if (!device) {
       throw new NotFoundException(ErrorMessages.DEVICE_NOT_FOUND);
     }
-    console.log('Device:', device);
+
     return device;
   }
 

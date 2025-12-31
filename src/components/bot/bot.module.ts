@@ -6,6 +6,7 @@ import { BotUpdate } from './bot.update';
 import { BotService } from './bot.service';
 import { MemberModule } from '../member/member.module';
 import { DeviceModule } from '../device/device.module';
+import { CommandModule } from '../command/command.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { DeviceModule } from '../device/device.module';
     }),
     MemberModule,
     DeviceModule,
+    CommandModule,
   ],
   providers: [BotUpdate, BotService],
 })

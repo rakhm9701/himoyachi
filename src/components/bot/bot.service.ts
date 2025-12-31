@@ -4,6 +4,7 @@ import { MemberService } from '../member/member.service';
 import { DeviceService } from '../device/device.service';
 import { DeviceOS } from 'src/libs/enum/device.enum';
 import { t, Lang } from '../../libs/i18n/messages';
+import { CommandService } from '../command/command.service';
 
 // ====== ADD FLOW STATE ======
 type AddStep = 'idle' | 'await_name' | 'await_os' | 'await_desc';
@@ -20,6 +21,7 @@ export class BotService {
   constructor(
     private readonly memberService: MemberService,
     private readonly deviceService: DeviceService,
+    private readonly commandService: CommandService,
   ) {}
 
   private addFlow = new Map<string, AddFlowState>();
@@ -39,10 +41,10 @@ export class BotService {
   private getMainMenu(lang: Lang) {
     return Markup.keyboard([
       [t(lang, 'btnAdd'), t(lang, 'btnDevices'), t(lang, 'btnStats')],
+      [t(lang, 'btnShutdown'), t(lang, 'btnRestart'), t(lang, 'btnLock')],
       [t(lang, 'btnLang'), t(lang, 'btnHelp')],
     ]).resize();
   }
-
   private getBackMenu(lang: Lang) {
     return Markup.keyboard([[t(lang, 'btnBack')]]).resize();
   }
@@ -364,6 +366,44 @@ export class BotService {
       }
       return;
     }
+
+    // Command yuborish (qurilma tanlanganda)
+    if (data.startsWith('cmd:')) {
+      const parts = data.split(':');
+      const commandType = parts[1];
+      const deviceKey = parts[2];
+
+      try {
+        await this.commandService.create({
+          deviceKey,
+          type: commandType as any,
+        });
+
+        const messages: Record<string, Record<string, string>> = {
+          shutdown: {
+            uz: "⏹ O'chirish buyrug'i yuborildi!",
+            ru: '⏹ Команда выключения отправлена!',
+            en: '⏹ Shutdown command sent!',
+          },
+          restart: {
+            uz: "🔄 Qayta yuklash buyrug'i yuborildi!",
+            ru: '🔄 Команда перезагрузки отправлена!',
+            en: '🔄 Restart command sent!',
+          },
+          lock: {
+            uz: "🔒 Qulflash buyrug'i yuborildi!",
+            ru: '🔒 Команда блокировки отправлена!',
+            en: '🔒 Lock command sent!',
+          },
+        };
+
+        await ctx.editMessageText(messages[commandType][lang]);
+      } catch (error) {
+        console.error('Command error:', error);
+        await ctx.reply(t(lang, 'error'));
+      }
+      return;
+    }
   }
 
   async onSetup(ctx: Context) {
@@ -596,5 +636,95 @@ export class BotService {
         ],
       ]),
     );
+  }
+
+  // /shutdown - Kompyuterni o'chirish
+  async onShutdown(ctx: Context) {
+    return this.sendCommand(ctx, 'shutdown');
+  }
+
+  // /restart - Kompyuterni qayta yuklash
+  async onRestart(ctx: Context) {
+    return this.sendCommand(ctx, 'restart');
+  }
+
+  // /lock - Ekranni qulflash
+  async onLock(ctx: Context) {
+    return this.sendCommand(ctx, 'lock');
+  }
+
+  // Umumiy command yuborish
+  private async sendCommand(ctx: Context, commandType: string) {
+    if (!ctx.from) return ctx.reply('❌ Error');
+
+    const telegramId = ctx.from.id.toString();
+    const lang = await this.getLang(telegramId);
+    const member = await this.memberService.findByTelegramId(telegramId);
+
+    if (!member) return ctx.reply(t(lang, 'startFirst'));
+
+    const { device, count } = await this.deviceService.findByMemberId(
+      (member as any)._id.toString(),
+    );
+
+    if (count === 0) {
+      return ctx.reply(t(lang, 'noDevices'));
+    }
+
+    // Agar 1 ta qurilma bo'lsa - to'g'ridan to'g'ri yuborish
+    if (count === 1) {
+      await this.commandService.create({
+        deviceKey: device[0].deviceKey,
+        type: commandType as any,
+      });
+
+      const messages: Record<string, Record<string, string>> = {
+        shutdown: {
+          uz: "⏹ Kompyuter o'chirish buyrug'i yuborildi!",
+          ru: '⏹ Команда выключения отправлена!',
+          en: '⏹ Shutdown command sent!',
+        },
+        restart: {
+          uz: "🔄 Kompyuter qayta yuklash buyrug'i yuborildi!",
+          ru: '🔄 Команда перезагрузки отправлена!',
+          en: '🔄 Restart command sent!',
+        },
+        lock: {
+          uz: "🔒 Ekran qulflash buyrug'i yuborildi!",
+          ru: '🔒 Команда блокировки отправлена!',
+          en: '🔒 Lock command sent!',
+        },
+      };
+
+      return ctx.reply(messages[commandType][lang]);
+    }
+
+    // Ko'p qurilma bo'lsa - tanlash
+    const buttons = device.map((d) => [
+      Markup.button.callback(
+        `📍 ${d.name}`,
+        `cmd:${commandType}:${d.deviceKey}`,
+      ),
+    ]);
+
+    const titles: Record<string, Record<string, string>> = {
+      shutdown: {
+        uz: "⏹ Qaysi qurilmani o'chirmoqchisiz?",
+        ru: '⏹ Какое устройство выключить?',
+        en: '⏹ Which device to shutdown?',
+      },
+      restart: {
+        uz: '🔄 Qaysi qurilmani qayta yuklash?',
+        ru: '🔄 Какое устройство перезагрузить?',
+        en: '🔄 Which device to restart?',
+      },
+      lock: {
+        uz: '🔒 Qaysi qurilmani qulflash?',
+        ru: '🔒 Какое устройство заблокировать?',
+        en: '🔒 Which device to lock?',
+      },
+    };
+
+    await ctx.reply(titles[commandType][lang], Markup.inlineKeyboard(buttons));
   }
 }

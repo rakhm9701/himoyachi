@@ -15,21 +15,21 @@ export class MemberService {
   async createMember(input: CreateMemberDto): Promise<Member> {
     const newMember = new this.memberModel(input);
     const result = await newMember.save();
-    console.log('Result:', result);
+
     return result;
   }
 
   //findByTelegramId
   async findByTelegramId(telegramId: string): Promise<Member | null> {
     const result = await this.memberModel.findOne({ telegramId });
-    console.log('Result:', result);
+
     return result;
   }
 
   //findById
   async findById(id: string): Promise<Member | null> {
     const result = await this.memberModel.findById(id);
-    console.log('Result:', result);
+
     return result;
   }
 
@@ -38,7 +38,7 @@ export class MemberService {
     const result = await this.memberModel.findByIdAndUpdate(id, input, {
       new: true,
     });
-    console.log('Result:', result);
+
     return result;
   }
 }

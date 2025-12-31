@@ -44,6 +44,24 @@ export class BotUpdate {
     return this.botService.onLang(ctx);
   }
 
+  @Command('shutdown')
+  async onShutdown(@Ctx() ctx: Context) {
+    console.log('Bot: /shutdown');
+    return this.botService.onShutdown(ctx);
+  }
+
+  @Command('restart')
+  async onRestart(@Ctx() ctx: Context) {
+    console.log('Bot: /restart');
+    return this.botService.onRestart(ctx);
+  }
+
+  @Command('lock')
+  async onLock(@Ctx() ctx: Context) {
+    console.log('Bot: /lock');
+    return this.botService.onLock(ctx);
+  }
+
   // Inline buttonlar (OS tanlash)
   @On('callback_query')
   async onCallback(@Ctx() ctx: any) {
@@ -62,6 +80,9 @@ export class BotUpdate {
     if (text.includes('🌐')) return this.botService.onLang(ctx);
     if (text.includes('❓')) return this.botService.onHelp(ctx);
     if (text.includes('⬅️')) return this.botService.cancelFlow(ctx);
+    if (text.includes('⏹')) return this.botService.onShutdown(ctx);
+    if (text.includes('🔄')) return this.botService.onRestart(ctx);
+    if (text.includes('🔒')) return this.botService.onLock(ctx);
 
     return this.botService.onText(ctx);
   }

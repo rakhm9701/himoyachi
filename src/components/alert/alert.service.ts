@@ -109,7 +109,6 @@ export class AlertService {
     const alerts = await this.alertModel
       .find({ deviceId: { $in: deviceIds } })
       .sort({ triggeredAt: -1 });
-    console.log('result:', alerts);
     return { alerts, count: alerts.length };
   }
 }

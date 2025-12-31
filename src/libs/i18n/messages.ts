@@ -1,53 +1,61 @@
 export const messages = {
   uz: {
-    welcome: '👋 Salom, {name}!\n\nHimoyachi Bot - kompyuteringizni nazorat qiling.',
+    welcome:
+      '👋 Salom, {name}!\n\nHimoyachi Bot - kompyuteringizni nazorat qiling.',
     error: '❌ Xatolik yuz berdi',
     startFirst: '❌ Avval /start bosing',
     menu: '📋 Menu:',
-    
+
     // Device
-    deviceAdded: '✅ Qurilma qo\'shildi!',
-    deviceDeleted: '✅ Qurilma o\'chirildi!',
+    deviceAdded: "✅ Qurilma qo'shildi!",
+    deviceDeleted: "✅ Qurilma o'chirildi!",
     deviceNotFound: '❌ Qurilma topilmadi',
-    deviceRenamed: '✅ Qurilma nomi o\'zgartirildi: *{name}*',
-    noDevices: '📱 Sizda hali qurilma yo\'q.\n\n/add - Yangi qurilma qo\'shish',
+    deviceRenamed: "✅ Qurilma nomi o'zgartirildi: *{name}*",
+    noDevices: "📱 Sizda hali qurilma yo'q.\n\n/add - Yangi qurilma qo'shish",
     enterDeviceName: '📛 Qurilma nomini kiriting:',
-    invalidDeviceName: '❌ Qurilma nomi noto\'g\'ri. Qayta kiriting:',
+    invalidDeviceName: "❌ Qurilma nomi noto'g'ri. Qayta kiriting:",
     selectOS: '💻 OS tanlang:',
     osSelected: '✅ OS tanlandi: {os}\n\n📝 Izoh kiriting (yoki "-" yozing):',
     yourKey: '🔑 Sizning kalitingiz:',
     totalDevices: '📱 Jami: {count} ta qurilma',
-    
+
     // Delete/Rename
-    confirmDelete: '🗑 *{name}* ni o\'chirmoqchimisiz?',
-    yesDelete: '✅ Ha, o\'chirish',
-    noCancel: '❌ Yo\'q',
+    confirmDelete: "🗑 *{name}* ni o'chirmoqchimisiz?",
+    yesDelete: "✅ Ha, o'chirish",
+    noCancel: "❌ Yo'q",
     cancelled: '❌ Bekor qilindi',
     enterNewName: '✏️ *{name}* uchun yangi nom kiriting:',
-    nameTooShort: '❌ Nom kamida 2 ta belgi bo\'lishi kerak. Qayta kiriting:',
-    
+    nameTooShort: "❌ Nom kamida 2 ta belgi bo'lishi kerak. Qayta kiriting:",
+
     // Buttons
-    btnAdd: '➕ Qurilma qo\'shish',
+    btnAdd: "➕ Qurilma qo'shish",
     btnDevices: '📱 Qurilmalarim',
     btnStats: '📊 Statistika',
     btnLang: '🌐 Til',
     btnHelp: '❓ Yordam',
     btnBack: '⬅️ Orqaga',
-    btnRename: '✏️ Nomini o\'zgartirish',
-    btnDelete: '🗑 O\'chirish',
-    
+    btnRename: "✏️ Nomini o'zgartirish",
+    btnDelete: "🗑 O'chirish",
+    btnShutdown: "⏹ O'chirish",
+    btnRestart: '🔄 Qayta yuklash',
+    btnLock: '🔒 Qulflash',
+
     // Stats
-    stats: '📊 *Statistika*\n\n📱 *Qurilmalar:* {total} ta\n   🟢 Active: {active}\n   🟡 Pending: {pending}\n   🔴 Inactive: {inactive}\n\n🔔 *Jami alertlar:* {alerts} ta\n\n📅 Ro\'yxatdan o\'tgan: {date}',
-    
+    stats:
+      "📊 *Statistika*\n\n📱 *Qurilmalar:* {total} ta\n   🟢 Active: {active}\n   🟡 Pending: {pending}\n   🔴 Inactive: {inactive}\n\n🔔 *Jami alertlar:* {alerts} ta\n\n📅 Ro'yxatdan o'tgan: {date}",
+
     // Lang
     selectLang: '🌐 Tilni tanlang:',
-    langChanged: '✅ Til o\'zgartirildi: O\'zbek',
-    
+    langChanged: "✅ Til o'zgartirildi: O'zbek",
+
     // Alert
-    deviceConnected: '✅ *Qurilma ulandi!*\n\n📍 Qurilma: {device}\n👤 User: {user}\n🕐 Vaqt: {time}\n\nEndi kompyuter yonganda xabar olasiz 📱',
-    devicePowerOn: '⚠️ *Kompyuter yondi!*\n\n📍 Qurilma: {device}\n👤 User: {user}\n🕐 Vaqt: {time}',
-    deviceOffline: '⚠️ *Qurilma offline!*\n\n📍 Qurilma: {device}\n🕐 Oxirgi signal: {time}\n\nTekshiring:\n• Kompyuter yoniqmi?\n• Internet bormi?\n• Script ishlayaptimi?',
-    
+    deviceConnected:
+      '✅ *Qurilma ulandi!*\n\n📍 Qurilma: {device}\n👤 User: {user}\n🕐 Vaqt: {time}\n\nEndi kompyuter yonganda xabar olasiz 📱',
+    devicePowerOn:
+      '⚠️ *Kompyuter yondi!*\n\n📍 Qurilma: {device}\n👤 User: {user}\n🕐 Vaqt: {time}',
+    deviceOffline:
+      '⚠️ *Qurilma offline!*\n\n📍 Qurilma: {device}\n🕐 Oxirgi signal: {time}\n\nTekshiring:\n• Kompyuter yoniqmi?\n• Internet bormi?\n• Script ishlayaptimi?',
+
     // Help
     help: `🛡 Himoyachi Bot - Yordam
 
@@ -69,11 +77,12 @@ Savol bo'lsa: @odilov07ko`,
   },
 
   ru: {
-    welcome: '👋 Привет, {name}!\n\nHimoyachi Bot - контролируйте свой компьютер.',
+    welcome:
+      '👋 Привет, {name}!\n\nHimoyachi Bot - контролируйте свой компьютер.',
     error: '❌ Произошла ошибка',
     startFirst: '❌ Сначала нажмите /start',
     menu: '📋 Меню:',
-    
+
     // Device
     deviceAdded: '✅ Устройство добавлено!',
     deviceDeleted: '✅ Устройство удалено!',
@@ -86,7 +95,7 @@ Savol bo'lsa: @odilov07ko`,
     osSelected: '✅ ОС выбрана: {os}\n\n📝 Введите описание (или "-"):',
     yourKey: '🔑 Ваш ключ:',
     totalDevices: '📱 Всего: {count} устройств',
-    
+
     // Delete/Rename
     confirmDelete: '🗑 Удалить *{name}*?',
     yesDelete: '✅ Да, удалить',
@@ -94,7 +103,7 @@ Savol bo'lsa: @odilov07ko`,
     cancelled: '❌ Отменено',
     enterNewName: '✏️ Введите новое название для *{name}*:',
     nameTooShort: '❌ Минимум 2 символа. Попробуйте снова:',
-    
+
     // Buttons
     btnAdd: '➕ Добавить устройство',
     btnDevices: '📱 Мои устройства',
@@ -104,19 +113,26 @@ Savol bo'lsa: @odilov07ko`,
     btnBack: '⬅️ Назад',
     btnRename: '✏️ Переименовать',
     btnDelete: '🗑 Удалить',
-    
+    btnShutdown: '⏹ Выключить',
+    btnRestart: '🔄 Перезагрузить',
+    btnLock: '🔒 Заблокировать',
+
     // Stats
-    stats: '📊 *Статистика*\n\n📱 *Устройства:* {total}\n   🟢 Active: {active}\n   🟡 Pending: {pending}\n   🔴 Inactive: {inactive}\n\n🔔 *Всего алертов:* {alerts}\n\n📅 Регистрация: {date}',
-    
+    stats:
+      '📊 *Статистика*\n\n📱 *Устройства:* {total}\n   🟢 Active: {active}\n   🟡 Pending: {pending}\n   🔴 Inactive: {inactive}\n\n🔔 *Всего алертов:* {alerts}\n\n📅 Регистрация: {date}',
+
     // Lang
     selectLang: '🌐 Выберите язык:',
     langChanged: '✅ Язык изменён: Русский',
-    
+
     // Alert
-    deviceConnected: '✅ *Устройство подключено!*\n\n📍 Устройство: {device}\n👤 Пользователь: {user}\n🕐 Время: {time}\n\nТеперь вы будете получать уведомления 📱',
-    devicePowerOn: '⚠️ *Компьютер включён!*\n\n📍 Устройство: {device}\n👤 Пользователь: {user}\n🕐 Время: {time}',
-    deviceOffline: '⚠️ *Устройство офлайн!*\n\n📍 Устройство: {device}\n🕐 Последний сигнал: {time}\n\nПроверьте:\n• Включён ли компьютер?\n• Есть ли интернет?\n• Работает ли скрипт?',
-    
+    deviceConnected:
+      '✅ *Устройство подключено!*\n\n📍 Устройство: {device}\n👤 Пользователь: {user}\n🕐 Время: {time}\n\nТеперь вы будете получать уведомления 📱',
+    devicePowerOn:
+      '⚠️ *Компьютер включён!*\n\n📍 Устройство: {device}\n👤 Пользователь: {user}\n🕐 Время: {time}',
+    deviceOffline:
+      '⚠️ *Устройство офлайн!*\n\n📍 Устройство: {device}\n🕐 Последний сигнал: {time}\n\nПроверьте:\n• Включён ли компьютер?\n• Есть ли интернет?\n• Работает ли скрипт?',
+
     // Help
     help: `🛡 Himoyachi Bot - Помощь
 
@@ -142,7 +158,7 @@ Savol bo'lsa: @odilov07ko`,
     error: '❌ An error occurred',
     startFirst: '❌ Please /start first',
     menu: '📋 Menu:',
-    
+
     // Device
     deviceAdded: '✅ Device added!',
     deviceDeleted: '✅ Device deleted!',
@@ -155,7 +171,7 @@ Savol bo'lsa: @odilov07ko`,
     osSelected: '✅ OS selected: {os}\n\n📝 Enter description (or "-"):',
     yourKey: '🔑 Your key:',
     totalDevices: '📱 Total: {count} devices',
-    
+
     // Delete/Rename
     confirmDelete: '🗑 Delete *{name}*?',
     yesDelete: '✅ Yes, delete',
@@ -163,7 +179,7 @@ Savol bo'lsa: @odilov07ko`,
     cancelled: '❌ Cancelled',
     enterNewName: '✏️ Enter new name for *{name}*:',
     nameTooShort: '❌ Minimum 2 characters. Try again:',
-    
+
     // Buttons
     btnAdd: '➕ Add device',
     btnDevices: '📱 My devices',
@@ -173,19 +189,26 @@ Savol bo'lsa: @odilov07ko`,
     btnBack: '⬅️ Back',
     btnRename: '✏️ Rename',
     btnDelete: '🗑 Delete',
-    
+    btnShutdown: '⏹ Shutdown',
+    btnRestart: '🔄 Restart',
+    btnLock: '🔒 Lock',
+
     // Stats
-    stats: '📊 *Statistics*\n\n📱 *Devices:* {total}\n   🟢 Active: {active}\n   🟡 Pending: {pending}\n   🔴 Inactive: {inactive}\n\n🔔 *Total alerts:* {alerts}\n\n📅 Registered: {date}',
-    
+    stats:
+      '📊 *Statistics*\n\n📱 *Devices:* {total}\n   🟢 Active: {active}\n   🟡 Pending: {pending}\n   🔴 Inactive: {inactive}\n\n🔔 *Total alerts:* {alerts}\n\n📅 Registered: {date}',
+
     // Lang
     selectLang: '🌐 Select language:',
     langChanged: '✅ Language changed: English',
-    
+
     // Alert
-    deviceConnected: '✅ *Device connected!*\n\n📍 Device: {device}\n👤 User: {user}\n🕐 Time: {time}\n\nYou will now receive notifications 📱',
-    devicePowerOn: '⚠️ *Computer turned on!*\n\n📍 Device: {device}\n👤 User: {user}\n🕐 Time: {time}',
-    deviceOffline: '⚠️ *Device offline!*\n\n📍 Device: {device}\n🕐 Last signal: {time}\n\nPlease check:\n• Is the computer on?\n• Is there internet?\n• Is the script running?',
-    
+    deviceConnected:
+      '✅ *Device connected!*\n\n📍 Device: {device}\n👤 User: {user}\n🕐 Time: {time}\n\nYou will now receive notifications 📱',
+    devicePowerOn:
+      '⚠️ *Computer turned on!*\n\n📍 Device: {device}\n👤 User: {user}\n🕐 Time: {time}',
+    deviceOffline:
+      '⚠️ *Device offline!*\n\n📍 Device: {device}\n🕐 Last signal: {time}\n\nPlease check:\n• Is the computer on?\n• Is there internet?\n• Is the script running?',
+
     // Help
     help: `🛡 Himoyachi Bot - Help
 
@@ -210,14 +233,18 @@ Questions: @odilov07ko`,
 export type Lang = 'uz' | 'ru' | 'en';
 export type MessageKey = keyof typeof messages.uz;
 
-export function t(lang: Lang, key: MessageKey, params?: Record<string, string | number>): string {
+export function t(
+  lang: Lang,
+  key: MessageKey,
+  params?: Record<string, string | number>,
+): string {
   let text = messages[lang]?.[key] || messages.uz[key] || key;
-  
+
   if (params) {
     Object.entries(params).forEach(([k, v]) => {
       text = text.replace(new RegExp(`\\{${k}\\}`, 'g'), String(v));
     });
   }
-  
+
   return text;
 }
